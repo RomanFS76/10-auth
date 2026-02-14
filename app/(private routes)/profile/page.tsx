@@ -1,9 +1,13 @@
+"use client"
+
 import Image from 'next/image';
 import Link from 'next/link';
 import css from './ProfilePage.module.css';
+import {useAuthStore} from '@/lib/store/authStore'
 
 
-const page = () => {
+const Page = () => {
+  const {user} = useAuthStore();
   return (
     <main className={css.mainContent}>
       <div className={css.profileCard}>
@@ -23,12 +27,12 @@ const page = () => {
           />
         </div>
         <div className={css.profileInfo}>
-          <p>Username: your_username</p>
-          <p>Email: your_email@example.com</p>
+          <p>Username: {user?.username}</p>
+          <p>Email: {user?.email || 'Email not available'}</p>
         </div>
       </div>
     </main>
   );
 };
 
-export default page;
+export default Page;

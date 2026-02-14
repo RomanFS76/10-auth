@@ -1,18 +1,35 @@
-'use client'
-import {register} from '@/lib/api'
-
+'use client';
 
 import css from './SignUpPage.module.css';
+import { register } from '@/lib/api';
+import {useAuthStore} from '@/lib/store/authStore'
 
-const page = () => {
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-const handleSubmit =(formData:FormData)=>{
-  const userEmail = formData.get('email') as string;
-  const userPassword = formData.get('password') as string;
+const SignUpPage = () => {
+  const [error, setError] = useState('');
 
-  register({email:userEmail,password:userPassword})
+  const {setUser} = useAuthStore();
+  const router = useRouter();
 
-};
+  const handleSubmit = async (formData: FormData): Promise<void> => {
+    const userEmail = formData.get('email') as string;
+    const userPassword = formData.get('password') as string;
+
+    try {
+      const res = await register({ email: userEmail, password: userPassword });
+      console.log(res)
+      if (res) {
+        setUser(res);
+        router.push('/profile');
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <main className={css.mainContent}>
@@ -46,10 +63,10 @@ const handleSubmit =(formData:FormData)=>{
           </button>
         </div>
 
-        <p className={css.error}>Error</p>
+        <p className={css.error}>{error}</p>
       </form>
     </main>
   );
 };
 
-export default page;
+export default SignUpPage;
