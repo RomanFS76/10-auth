@@ -13,14 +13,13 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const {data} = await fetchNoteById(id);
-  console.log(data)
+  const {title,content} = await fetchNoteById(id);
   return {
-    title: data.title,
-    description: data.content,
+    title: title,
+    description: content,
     openGraph: {
-      title: data.title,
-      description: data.content,
+      title: title,
+      description: content,
       url: `https://notehub.io/notes/${id}`,
       siteName: 'NoteHub',
       images: [
@@ -28,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
           width: 1200,
           height: 630,
-          alt: data.title,
+          alt: title,
         },
       ],
       type: 'article',
@@ -43,7 +42,7 @@ const NoteDetails = async ({ params }: Props) => {
 
   await queryClient.prefetchQuery({
     queryKey: ['notes', id],
-    queryFn: async () => (await fetchNoteById(id)).data,
+    queryFn: async () => await fetchNoteById(id),
   });
 
   return (
