@@ -1,13 +1,18 @@
-"use client"
+
 
 import Image from 'next/image';
 import Link from 'next/link';
 import css from './ProfilePage.module.css';
-import {useAuthStore} from '@/lib/store/authStore'
+import { getMe } from '@/lib/api/serverApi';
+
+const defaultLogo = '/default_foto.png';
+
+const ProfilePage = async() => {
 
 
-const Page = () => {
-  const {user} = useAuthStore();
+const {username,email,avatar} = await getMe();
+
+
   return (
     <main className={css.mainContent}>
       <div className={css.profileCard}>
@@ -19,7 +24,7 @@ const Page = () => {
         </div>
         <div className={css.avatarWrapper}>
           <Image
-            src="https://ac.goit.global/fullstack/react/default-avatar.jpg"
+            src={avatar ? "https://ac.goit.global/fullstack/react/default-avatar.jpg" : defaultLogo}
             alt="User Avatar"
             width={120}
             height={120}
@@ -27,12 +32,12 @@ const Page = () => {
           />
         </div>
         <div className={css.profileInfo}>
-          <p>Username: {user?.username}</p>
-          <p>Email: {user?.email || 'Email not available'}</p>
+          <p>Username: {username}</p>
+          <p>Email: {email}</p>
         </div>
       </div>
     </main>
   );
 };
 
-export default Page;
+export default ProfilePage;

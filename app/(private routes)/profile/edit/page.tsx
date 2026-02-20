@@ -21,7 +21,7 @@ const EditProfilePage = () => {
       const res = await updateMe({ email: email ?? '', username });
       if (res) {
         setUser(res);
-        router.back();
+        router.push('/profile');
       }
     } catch (error) {
       setError(
