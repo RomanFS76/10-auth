@@ -9,14 +9,13 @@ import { Metadata } from 'next';
 
 type Props = {
   params: Promise<{ slug: string[] }>;
-  searchParams: { search?: string; page?: number };
+  searchParams: Promise<{ search?: string; page?: string; tag?: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
   const tag = slug?.[0] === 'all' ? 'All' : slug?.[0];
-  console.log(tag);
 
   const title =
     tag === 'All'
@@ -57,9 +56,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const NotesByCategory = async ({ params, searchParams }: Props) => {
   const { slug } = await params;
 
-  const search = searchParams?.search || '';
+  const search = (await searchParams)?.search || '';
   const tag = slug?.[0] === 'all' ? undefined : slug?.[0];
-  const page = searchParams?.page || 1;
+  const page = Number((await searchParams)?.page) || 1;
 
   const queryClient = new QueryClient();
 
