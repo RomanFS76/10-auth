@@ -54,7 +54,7 @@ interface RegisterRequest {
   password: string;
 }
 
-export const register = async (data: RegisterRequest) => {
+export const register = async (data: RegisterRequest):Promise<User> => {
   const res = await nextServer.post<User>('/auth/register', data);
   return res.data;
 };
@@ -64,7 +64,7 @@ export interface LoginRequest {
   password: string;
 }
 
-export const login = async (data: LoginRequest) => {
+export const login = async (data: LoginRequest):Promise<User> => {
   const res = await nextServer.post<User>('/auth/login', data);
   return res.data;
 };
@@ -73,12 +73,12 @@ type CheckSessionRequest = {
   success: boolean;
 };
 
-export const checkSession = async () => {
+export const checkSession = async ():Promise<boolean> => {
   const res = await nextServer.get<CheckSessionRequest>('/auth/session');
   return res.data.success;
 };
 
-export const getMe = async () => {
+export const getMe = async ():Promise<User> => {
   const { data } = await nextServer.get<User>('/users/me');
   return data;
 };
